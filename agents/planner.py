@@ -1,30 +1,36 @@
 import json
-from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
-from langchain.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import JsonOutputParser
+from config.settings import llm
 
-load_dotenv()
 
 class PlannerAgent:
     def __init__(self):
-        self.llm = ChatOpenAI(
-            model="deepseek/deepseek-r1",  # FREE on OpenRouter
-            temperature=0,
-            base_url="https://openrouter.ai/api/v1"
-        )
+        self.parser = JsonOutputParser()
 
-        with open("prompts/planner_prompt.txt") as f:
-            template = f.read()
+        self.prompt = ChatPromptTemplate.from_messages([
+            ("system", "You are a task planning agent."),
+            ("human",
+             """
+             Create a task plan for food ordering automation.
 
-        self.prompt = ChatPromptTemplate.from_template(template)
+             Inputs:
+             - People: {people}
+             - Budget: {budget}
+             - Food Type: {food_type}
 
-    def plan(self, people: int, budget: int, food_type: str):
-        response = self.llm.invoke(
-            self.prompt.format_messages(
-                people=people,
-                budget=budget,
-                food_type=food_type
-            )
-        )
+             Return ONLY valid JSON in this format:
+             {{
+               "tasks": ["select_restaurant", "select_menu_items", "calculate_quantity", "check_budget", "validate_order"]
+             }}
+             """)
+        ])
 
-        return json.loads(response.content)
+    def plan(self, people, budget, food_type):
+        chain = self.prompt | llm | self.parser
+
+        return chain.invoke({
+            "people": people,
+            "budget": budget,
+            "food_type": food_type
+        })

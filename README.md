@@ -75,21 +75,22 @@ You'll be prompted to enter:
 
 Example interaction:
 ```
-=== Food Ordering Automation System ===
+=== Food Ordering Automation (Stage 6) ===
 Enter number of people: 5
 Enter budget (INR): 1000
 Food type (veg / non-veg): veg
 
-Generated Task Plan:
-{
-  "tasks": [
-    "select_restaurant",
-    "select_menu_items",
-    "calculate_quantity",
-    "check_budget",
-    "validate_order"
-  ]
-}
+Planner Output: {'tasks': ['select_restaurant', 'select_menu_items', 'calculate_quantity', 'check_budget', 'validate_order']}
+
+Selected Restaurant: A2B Veg Restaurant
+
+Items with Quantity: [{'name': 'Veg Meals', 'price': 180, 'quantity': 5}, {'name': 'Paneer Butter Masala', 'price': 220, 'quantity': 5}]
+
+Budget Check: {'status': 'PASS', 'total_cost': 2000}
+
+Validation Result: Order validated successfully
+
+✅ Order can be processed
 ```
 
 ## 📁 Project Structure
@@ -106,7 +107,7 @@ Food_Ordering/
 │   ├── execution_agent.py    # Order execution agent
 │   └── coordinator.py        # Agent coordinator
 ├── config/                    # Configuration files
-│   └── settings.py
+│   └── settings.py           # Centralized LLM config
 ├── data/                      # Data files
 │   └── menu.json             # Restaurant menu database
 ├── graph/                     # LangGraph definitions
@@ -133,29 +134,48 @@ The system includes a sample menu database (`data/menu.json`) with restaurants a
 
 You can extend the menu by adding more restaurants and items to the JSON file.
 
+## 🔄 Agent Workflow
+
+The system follows this sequential workflow:
+
+1. **Planner Agent**: Receives user input (people, budget, food_type) and generates task plan
+2. **Menu Agent**: Selects appropriate restaurant based on food type preference
+3. **Quantity Agent**: Calculates item quantities (1 item per person)
+4. **Budget Agent**: Validates total cost against budget constraint
+5. **Validation Agent**: Performs final validation checks
+6. **Output**: Displays complete order summary with validation status
+
 ## 🔧 Technologies Used
 
-- **LangChain**: Framework for building LLM applications
-- **LangGraph**: Framework for building multi-agent workflows
+- **LangChain Core**: Framework for building LLM applications
+- **LangChain OpenAI**: OpenAI-compatible LLM integration
 - **DeepSeek-R1**: Free reasoning model via OpenRouter
 - **Python-dotenv**: Environment variable management
 - **Pydantic**: Data validation
 - **JSON**: Data storage and exchange
+- **JsonOutputParser**: Structured LLM output parsing
 
 ## 🛠️ Development Status
 
 This is a Final Year Project currently under development. The following components are implemented:
 
-- ✅ Planner Agent
-- ✅ Menu Database
-- ✅ Basic CLI Interface
-- ✅ LLM Integration (DeepSeek-R1)
-- 🚧 Menu Agent (In Progress)
-- 🚧 Budget Agent (In Progress)
-- 🚧 Quantity Agent (In Progress)
-- 🚧 Validation Agent (In Progress)
-- 🚧 Execution Agent (In Progress)
-- 🚧 Agent Graph Workflow (In Progress)
+### ✅ Completed (Stage 6)
+- ✅ Planner Agent (with JsonOutputParser)
+- ✅ Menu Agent (restaurant & item selection)
+- ✅ Quantity Agent (quantity calculation logic)
+- ✅ Budget Agent (budget validation)
+- ✅ Validation Agent (order validation)
+- ✅ Centralized LLM Configuration (config/settings.py)
+- ✅ Complete Multi-Agent Workflow Pipeline
+- ✅ Menu Database (data/menu.json)
+- ✅ CLI Interface with Full Output
+
+### 🚧 In Progress
+- 🚧 Execution Agent (order execution)
+- 🚧 Coordinator Agent (advanced orchestration)
+- 🚧 LangGraph Integration (graph-based workflow)
+- 🚧 Error Handling & Logging
+- 🚧 Unit Tests
 
 ## 🤝 Contributing
 
