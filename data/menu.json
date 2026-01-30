@@ -1,0 +1,32 @@
+{
+    "restaurants": [
+        {
+            "name": "A2B Veg Restaurant",
+            "type": "veg",
+            "items": [
+                {
+                    "name": "Veg Meals",
+                    "price": 180
+                },
+                {
+                    "name": "Paneer Butter Masala",
+                    "price": 220
+                }
+            ]
+        },
+        {
+            "name": "SS Hyderabad",
+            "type": "non-veg",
+            "items": [
+                {
+                    "name": "Chicken Biryani",
+                    "price": 250
+                },
+                {
+                    "name": "Chicken 65",
+                    "price": 180
+                }
+            ]
+        }
+    ]
+}
